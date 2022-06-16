@@ -8,6 +8,6 @@ class ProgrammerTest {
     @Test
     void name() {
         final FrontEnd frontEnd = new FrontEnd();
-        frontEnd.makeProgram(new Client());
+        frontEnd.getProgram(new Client());
     }
 }

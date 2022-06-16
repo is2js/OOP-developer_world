@@ -4,7 +4,7 @@ import developer.Program;
 import developer.paper.Paper;
 
 public abstract class Programmer {
-    public Program makeProgram(final Paper paper) {
+    public Program getProgram(final Paper paper) {
         setData(paper);
         return makeProgram();
     }

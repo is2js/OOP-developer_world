@@ -37,8 +37,8 @@ public class Director {
             project.setBackEndProgrammer(backEnd);
 
             // 각 프로그래머들에게 paper던져주며, program만들라고 시키기
-            final Program client = frontEnd.makeProgram(project);
-            final Program server = backEnd.makeProgram(project);
+            final Program client = frontEnd.getProgram(project);
+            final Program server = backEnd.getProgram(project);
 
             // 자신만의 메서드를 통해, 내부필드값을 이용해, 여기서 deploy시키기
             // -> 완성된 프로그램들을 name과 함께 deploy
@@ -51,7 +51,7 @@ public class Director {
             final Client project = (Client) paper;
             final FrontEnd frontEnd = new FrontEnd();
             project.setProgrammer(frontEnd);
-            final Program program = frontEnd.makeProgram(project);
+            final Program program = frontEnd.getProgram(project);
             deploy(name, program);
         }
     }
