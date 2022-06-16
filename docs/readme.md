@@ -163,5 +163,39 @@
             ![20220616223622](https://raw.githubusercontent.com/is2js/screenshots/main/20220616223622.png)
             ![20220616223638](https://raw.githubusercontent.com/is2js/screenshots/main/20220616223638.png)
             ![20220616223655](https://raw.githubusercontent.com/is2js/screenshots/main/20220616223655.png)
+
+    3. 템플릿메소드내에서도 보이지 않는 부모-자식간의 헐리웃원칙이 적용된다.
+        - setData(paper)로 자식에게 시켜야하지, 부모(추상클래스내 템플릿메소드 내부)가 뭘 받아서 처리하면 안된다.
+        - 객체없이 호출하는 메서드 = this내 필드/메서드이용 메서드
+        - 객체 없이 호출하는 추상메서드 = **자식의 필드/메서드 이용해서 구현하는 메서드**
+            - 자식이 알아서 get으로 받아오지말고 시킨다.
+        
+
+7. Programmer쪽(N에서 1을 받아 구현체확인하여처리)의 instanceof(LSP위반)을 제네릭으로 처리
+    1. BackEnd -> FrontEnd순으로 instanceof를 제네릭으로 처리
+        - 추상층에서는 Paper의 구상체 아무거나 받아 인자로 쓸 수 있게  T extends Paper의 T형을 받을 수 있게 해주고
+        - **각 구상층들은 T형을 1개의 구상체로서 받아서 사용할 수 있게 한다. -> `딱 그 구상층만 받을 수 있는 범용->특정구상체용 class가 된다.`**
+            - if를 인터페이스로 줄이면 그 수만큼 구상체 객체class가 생기듯이
+            -**if instanceof를 제네릭으로 줄이면 `그 수만큼 개별class가 한정되서 생겨야한다`**
+                - 그래서 instanceof는 1개만 가져야한다?!
+        ![fa102321-dca5-4933-b3b1-914e65880a59](https://raw.githubusercontent.com/is2js/screenshots/main/fa102321-dca5-4933-b3b1-914e65880a59.gif)
+
+    2. **여기서 `Director`쪽에 어느 paper를 받건 instancof로 `FrontEnd를 범용으로 사용하던 코드`에서 문제가 발생한다.**
+        - Director는 1개의 paper를 받아서
+            - frontEnd, backEnd 2명에게 다 프로그램만들라 시킨다.
+            - 1개의 구상체 paper가 BackEnd용 ServerClient paper라면 -> FrontEnd는 `제네릭으로 인해 1개의 paper만 처리`하도록 = 현재 T타입 중 ServerClient paper전용으로 처리하도록 되어있어서 없던 compile오류(형으로 판단하는 제네릭)가 발생한다
+        - my) FrontEnd class가, 특정 추상체에 대해 특정 구상체만 받도록 하기 위해, 
+            - `FrontEnd의 추상층`에 특정 추상체를 upperbound T `제네릭` + 메서드에 T
+            - FrontEnd class자체를 `특정 구상체 형만 받도록 제한하는 제네릭`을 통해 메서드인자에 특정 구상체만 한정해서 처리할 수있게 함.
+            - **하지만, 더 client쪽인 Director내부에서는 FrontEnd가 범용으로 사용되길 원함**
+                - my) client쪽에서 특정구상체를 선택할 수있게 FrontEnd<`ServerClient`>의 제네릭을 특정하지말고 또한번 추상화?!
+    
+        - 객체들을 추상화한 class는 여러 객체들을 변수로 받아 생성할 수 있다. 하지만, **class + `제네릭 개입` -> 제약 = `인자나 필드형에 특정형만 쓸 수 있는` class**
+            - 제약된 만큼 제약을 푸려면 `타 추상체의 if instanceof 분기`만큼 class를 따로 생성해야한다.
+            - **`자신의 추상층T extends upperbound -> 자신은 구현하며 특정형`의 제네릭이 걸린 class는 어떻게 upperbound의 구상체 수만큼 class를 따로 생성해줄까?**
+                - 일반적으로 생성하면, class명이 동일해서 따로 못 만든다.
+
+        - 
+        
         
 

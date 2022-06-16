@@ -3,22 +3,17 @@ package developer.progammer;
 import developer.Language;
 import developer.Program;
 import developer.Server;
-import developer.paper.Paper;
 import developer.paper.ServerClient;
 
-public class BackEnd extends Programmer {
+public class BackEnd extends Programmer<ServerClient> {
 
     private Server server;
 
     private Language language;
 
-    @Override
-    protected void setData(final Paper paper) {
-        if (paper instanceof ServerClient) {
-            final ServerClient pa = (ServerClient) paper;
-            server = pa.getServer();
-            language = pa.getBackEndLanguage();
-        }
+    protected void setData(final ServerClient paper) {
+        server = paper.getServer();
+        language = paper.getBackEndLanguage();
     }
 
     @Override
