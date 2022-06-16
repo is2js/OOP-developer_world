@@ -11,11 +11,12 @@ public class BackEnd implements Programmer {
     private Server server;
     private Language language;
 
+    @Override
     public Program makeProgram(final Paper paper) {
         if (paper instanceof ServerClient) {
             final ServerClient pa = (ServerClient) paper;
             server = pa.getServer();
-            language = pa.getLanguage();
+            language = pa.getBackEndLanguage();
         }
 
         return makeBackEndProgram();

@@ -15,7 +15,7 @@ public class Director {
     }
 
     public void runProject(final String name) {
-        // 해당 명세가 있나 확인한다. 없으면 에러를 낸다.
+        // 실행할 해당 명세가 있나 확인한다. 없으면 에러를 낸다.
         if (projects.containsKey(name)) {
             throw new RuntimeException("no project");
         }

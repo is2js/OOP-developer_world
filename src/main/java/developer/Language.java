@@ -1,9 +1,9 @@
 package developer;
 
 public class Language {
-    private final String value;
+    private final String name;
 
-    public Language(final String value) {
-        this.value = value;
+    public Language(final String name) {
+        this.name = name;
     }
 }

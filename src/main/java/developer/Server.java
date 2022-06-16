@@ -1,9 +1,9 @@
 package developer;
 
 public class Server {
-    private final String value;
+    private final String name;
 
-    public Server(final String value) {
-        this.value = value;
+    public Server(final String name) {
+        this.name = name;
     }
 }
