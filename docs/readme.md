@@ -32,7 +32,7 @@
 		- 부모형인 Paper자체만으로 자식형 Server, ClientServer가 알아서 처리되지 못한다면, **LSP 위반**이다.
 		- **구상체 추가시 if가 추가되는 OCP위반**에 선행되는 문제점이 **부모형으로 자식형을 대체 못함(LSP위반)**이다.
 
-2. LSP(isinstanceof) 해결 by 헐리웃 원칙
+2. LSP(isinstanceof) 해결 시행착오 by 헐리웃 원칙
     - 내 생각: 추상체가 구상체를 대신 못하는 이유는 한꺼번에 일을 못시키기 때문에, 구상체의 지식을 직접 물어보는 것
     - **구상체인지 물어보지말고, `추상체`에게 (메서드 생성)하여 직접 시킨다.(헐리웃원칙)**
         - 재료(필드정보)를 꺼내와서 현재 객체 필드에 set시켜주는 작업을 직접시킨다면, `현재객체(this)`를 건네줘야한다.
@@ -45,4 +45,15 @@
         - **추상체로 받기 때문에 `추가 구상형을 확장할 수 있다`**
 
     
+    - **시키다보니, Programmer 역시 추상체로 넘어가서, 구현체마다 서로 다른 필드를 가지고 있기 때문에, 재료정보를 박아주기 위해 생성되는 setter가, 공통이 아닌 필드의 setter까지 인터페이스에 올라가버린다.**
+        ![11471d15-0e22-4018-9229-046ec8227f9f](https://raw.githubusercontent.com/is2js/screenshots/main/11471d15-0e22-4018-9229-046ec8227f9f.gif)
+
+        ![20220616160834](https://raw.githubusercontent.com/is2js/screenshots/main/20220616160834.png)
+        - 백엔드에서 사용하지 않는 library필드의 setter
+            ![20220616160857](https://raw.githubusercontent.com/is2js/screenshots/main/20220616160857.png)
+        - 프론트에서 사용하지 않는 server필드의 setter
+            ![20220616160935](https://raw.githubusercontent.com/is2js/screenshots/main/20220616160935.png)
+
+    - 일단 공통기능이 아니므로 인터페이스에서는 명세는 삭제하고
+        - **구현체들 개별적으로 사용해야하는데, 그러려면 물어봐야한다.**
     

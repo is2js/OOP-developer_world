@@ -41,4 +41,10 @@ public class ServerClient implements Paper {
     public Programmer getBackEndProgrammer() {
         return backEndProgrammer;
     }
+
+    @Override
+    public void setData(final Programmer programmer) {
+        programmer.setLanguage(backEndLanguage);
+        programmer.setServer(server);
+    }
 }
