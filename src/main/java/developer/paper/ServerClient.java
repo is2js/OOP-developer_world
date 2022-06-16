@@ -27,10 +27,7 @@ public class ServerClient implements Paper {
 
     @Override
     public void setData(final Programmer programmer) {
-//        programmer.setLanguage(backEndLanguage);
-//        programmer.setServer(server);
 
-        // 2개의 다운캐스팅 -> 1:M관계로 난이도 더 올라감 -> 백업 필요함.
         if (programmer instanceof FrontEnd) {
             final FrontEnd frontEnd = (FrontEnd) programmer;
             frontEnd.setLanguage(frontEndLanguage);

@@ -63,3 +63,31 @@
     - **LSP위반 해결책이 헐리웃원칙이지만, 시켜서 넘어가는 놈이 `공통기능 없는 추상체`일 경우, 똑같은 LSP문제가 발생한다.**
         - Client(Paper)
             ![20220616162114](https://raw.githubusercontent.com/is2js/screenshots/main/20220616162114.png)
+        - ServerClient(Paper)
+            ![20220616163756](https://raw.githubusercontent.com/is2js/screenshots/main/20220616163756.png)
+
+    - **추상체는 메서드 1개이하여야한다. 그럼에도 불구하고 추상층의 정보가 적지않으려면??**
+
+
+4. LSP위반과 별개로 공통로직을 가진 구현체들의 추상층을 인터페이스 -> 추상클래스(템플릿메서드패턴=`외부호출용 public 1개` + 그 내부에서 `step별 자식들이 개별구현할 proteced abstract 메서드들`)의 추상클래스로 만들기
+    - 공통로직을 추상층에 올리지 않으면 `DRY원칙 위반`이다.
+    - 추상클래스도 메서드가 1개이하이면서 `정보를 많이 담은 추상층`으로 만드는 방법이 `템플릿 메소드 패턴`을 이용하는 것이다.
+        - 내부에서 protected abstract step메서드들을 자식들이 개별구현한다.
+        - **public 템플릿 메소드는 개별 자식들에게는 안보이지만 물려받는다.**
+    1. 새롭게 `@Override로 추상클래스를 뽑아내기` 위해서, 상대적으로 가벼운 기존 인터페이스를 삭제한다.
+        ![e9f2f1e1-aef6-45fd-a2fa-e20581e48799](https://raw.githubusercontent.com/is2js/screenshots/main/e9f2f1e1-aef6-45fd-a2fa-e20581e48799.gif)
+        - **implements 구상체들마다 직접 삭제해야한다**
+        ![20220616172755](https://raw.githubusercontent.com/is2js/screenshots/main/20220616172755.png)
+    2. 구상체 1개로 `공통 로직을 포함하는 메서드`(to public 템플릿메서드)를 @Override 리팩토링을 통해서 `Extract superclass`로 추출하되
+        - 공통로직은 추상클래스에 위치하여 구상체에서는 안보이게 된다.
+        - **내부에 딸린 개별구현로직은 `abstract`로 추출한다.**
+            - **개별로직은 abstract 메서드가 되어, 자식이 @Override한다.**
+            - **다른 구상체들이 @Override할 수 있게 `메서드명 추상화`를 따로 해줘야한다.**
+        - **이제 다른 구상체들이 추상클래스를 extends하고, `자신이 가진 개별로직을 훅메서드를 오버라이딩 한 곳으로 옮겨준다`.**
+        - 추상체가 인터페이스(변수, 소통왕, 기능)에서 변수로서 역할을 못하는 추상클래스로 바껴서 이리저리 에러가 날 것이다.
+
+        
+        
+        
+
+

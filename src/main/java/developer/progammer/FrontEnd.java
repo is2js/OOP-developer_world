@@ -3,24 +3,18 @@ package developer.progammer;
 import developer.Language;
 import developer.Library;
 import developer.Program;
-import developer.paper.Paper;
 
-public class FrontEnd implements Programmer {
+public class FrontEnd extends Programmer {
 
     private Language language;
 
     private Library library;
 
     @Override
-    public Program makeProgram(final Paper paper) {
-        paper.setData(this);
-
-        return makeFrontEndProgram();
-    }
-
-    private Program makeFrontEndProgram() {
+    protected Program makeProgram() {
         return new Program();
     }
+
 
     public void setLanguage(final Language language) {
         this.language = language;

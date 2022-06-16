@@ -3,22 +3,15 @@ package developer.progammer;
 import developer.Language;
 import developer.Program;
 import developer.Server;
-import developer.paper.Paper;
 
-public class BackEnd implements Programmer {
+public class BackEnd extends Programmer {
 
     private Server server;
 
     private Language language;
 
     @Override
-    public Program makeProgram(final Paper paper) {
-        paper.setData(this);
-
-        return makeBackEndProgram();
-    }
-
-    private Program makeBackEndProgram() {
+    protected Program makeProgram() {
         return new Program();
     }
 

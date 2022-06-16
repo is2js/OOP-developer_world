@@ -3,7 +3,12 @@ package developer.progammer;
 import developer.Program;
 import developer.paper.Paper;
 
-public interface Programmer {
+public abstract class Programmer {
+    public Program makeProgram(final Paper paper) {
+        paper.setData(this);
 
-    Program makeProgram(Paper paper);
+        return makeProgram();
+    }
+
+    protected abstract Program makeProgram();
 }
