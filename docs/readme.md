@@ -143,4 +143,25 @@
             - sqlalchemy에서는 many테이블에서 fk를 가지면 해당변수는 단수로 편함. one테이블에서 fk정보를 가지면 list로 가져야해서 복잡
         - **1에서 정보를 가진다? 많이 알아야한다 -> 의존성의 무게가 커진다. `항상 many쪽에서 one의 정보를 알자=의존하자=사용하자=인자로 넘겨주자`**
 
-6. 
+6. paper(1쪽)에 programmer(N쪽)을 넘겨서 시키는 일(paper종류마다 programmer종류마다 field에 set을 위임)을 `롤백`함
+    1. `Paper`는 마커인터페이스로 롤백(제네릭 삭제) 
+        - 구현체들(`Client`, `ServerClient`)은 data-oriented class로 롤백
+        - programmer필드만 set메서드로 채워주는 것만 메서드로 가짐
+        ![20220616215556](https://raw.githubusercontent.com/is2js/screenshots/main/20220616215556.png)
+        ![20220616220225](https://raw.githubusercontent.com/is2js/screenshots/main/20220616220225.png)
+        ![20220616220232](https://raw.githubusercontent.com/is2js/screenshots/main/20220616220232.png)
+    2. **`Prgorammer`쪽은 템플릿메소드패턴을 유지하되** paper한테 .setData()의 책임을 `this`로 넘겨서 위임했던 것을
+        1. 템플릿메소드내에서 공통로직 && N to 1 위임메서드인 `paper.setData(this)`를 -> 개별구현 훅메서드(abstract protected step메서드들)로 `setData(paper)`로 뺀다.
+            - **추상층에서 객체없이 호출**하는 추상메서드는 **구상층에서 구현할 때, 구현체내 필드들을 이용해서 처리하는 메서드**이므로 구상체마다 각자의 필드에 `알아서 처리(abstract)`하도록 위임한다.
+        2. 템플릿메소드명을 make`Program`(Paper paper)에서 `getProgram`(Paper paper)로 변경한다.?!
+            - 공통로직인 템플릿메소드는, BackEnd든 FrontEnd든 paper에서 재료를 꺼내서 자기필드를 채우고, 프로그램을 만들어서 반환해야한다
+                - step1) setData(paper) 공통으로 재료를 박아야함
+                    - 필드가 달라 내부구현 다름 `abst step메서드`
+                - step2) makeProgram() 공통으로 박은재료들로 프로그램을 만들어줘야함.
+                    - 내부구현 다름 `abst step메서드`
+        2. Programmer 구현체들(BackEnd, FrontEnd)에서는 setData(paper)를 개별 구현시 `instanceof`로 일단 구현하도록 롤백한다.
+            ![20220616223622](https://raw.githubusercontent.com/is2js/screenshots/main/20220616223622.png)
+            ![20220616223638](https://raw.githubusercontent.com/is2js/screenshots/main/20220616223638.png)
+            ![20220616223655](https://raw.githubusercontent.com/is2js/screenshots/main/20220616223655.png)
+        
+
