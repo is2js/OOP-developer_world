@@ -27,7 +27,9 @@ public class ServerClient implements Paper {
 
     @Override
     public void setData(final Programmer programmer) {
-
+        // 2개의 instanceof는 제네릭으로 형을 좁혀 치환할 수 없다.
+        // 1개의 paper는 여러 programmer를 다룰 수 있기 때문에, 1쪽에서는 N을 받으면 안된다.
+        // -> programmer(N)쪽에서 paper(1)를 넘겨받아 의존/사용/알게한다
         if (programmer instanceof FrontEnd) {
             final FrontEnd frontEnd = (FrontEnd) programmer;
             frontEnd.setLanguage(frontEndLanguage);

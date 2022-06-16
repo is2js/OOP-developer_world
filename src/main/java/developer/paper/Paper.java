@@ -2,7 +2,7 @@ package developer.paper;
 
 import developer.progammer.Programmer;
 
-public interface Paper {
+public interface Paper<T extends Programmer> {
 
-    void setData(Programmer programmer);
+    void setData(T programmer);
 }
