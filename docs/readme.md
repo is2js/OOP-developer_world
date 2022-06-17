@@ -337,3 +337,42 @@
         - **if instance유발코드는 메인까지 단계적 추상화를 통해 밀어내면, 자유롭게 `구상체선택 &구상체별 개별로직 구현`뿐만 아니라 `구상체 추가` 할 수 있게 되고, `최종적으로 Main에서 구현하는 코드를 DI로 주입`할 수 있게 된다.**
         - 생각해보니 `Programmer`쪽도 추상클래스 -> 구상체들도 추상클래스로 추상화하여, 구상체 생성하면서 개별구현로직을 구현하도록 작성된 상태다.
             ![20220617185408](https://raw.githubusercontent.com/is2js/screenshots/main/20220617185408.png)
+
+
+10. [실전] 분기문을 만들었던 `추상체-추상메서드1개 -> 구상체-개별구현` 로직을 main으로 보내기 by `구상체를 다시 한번 추상class`로
+    1. 공통로직을 묶은 추상메서드`run`을 개별구현 중인 구상체 `Client`와 `ServerClinet`를 추상클래스로 바꾼다.
+        - 일반클래스: 외부에서 `이미 정의된 class로` 객체생성해서 구상체 선택 
+        - **추상클래스: 객체생성 못하지만, `추상메서드 구현하면 익명클래스로서 구현하여, 구현마다 다른 새로운 구상체 생성`하여 선택**
+        ![6556b082-5d28-4411-bd84-34a5ef7be314](https://raw.githubusercontent.com/is2js/screenshots/main/6556b082-5d28-4411-bd84-34a5ef7be314.gif)
+    2. 구상체내 개별구현중인 `상위 추상층인 인터페이스의 추상메서드 -> run`을 외부에서 구현하도록 하기 위해, **인터페이스 속 추상메서드를 `중간 추상클래스(ServerClient, Client)에서 정의안해도` 자식들(외부에서 익명클래스로 구현 및 생성)에게 추상메서드가 잘 넘어가니, `중간 추상층으로서 추상메서드 삭제 -> 외부구현 장소에 잘라놓기`**
+        - 기존에 Programmer(추상클래스+추상메서드+제네릭T) -> BackEnd(추상클래스+추상메서드+T) 역시, BackEnd가 `[추상체 <-> 자식(익명클래스)]사이에 낀 추상클래스라면 정의안하고 자식에게 추상메서드 물려주기 가능`
+            - **중간 추상층은 추상메서드를 가지고 있어도 되지만, 없애도 자식에게 넘어간다?!**
+            - 삭제 전
+                - Programmer(상위 추상층)
+                ![20220617232708](https://raw.githubusercontent.com/is2js/screenshots/main/20220617232708.png)
+                - BackEnd(중간 추상층)
+                ![20220617232716](https://raw.githubusercontent.com/is2js/screenshots/main/20220617232716.png)
+                - 외부 구현(추상메서드 구현할 자식)
+                ![20220617232753](https://raw.githubusercontent.com/is2js/screenshots/main/20220617232753.png)
+            - 중간 추상층의 상위 추상층 추상메서드 정의 삭제해보기
+                - BackEnd에서 추상메서드 삭제해도 상위추상층의 protected abstract 추상메서드가 자식에서 잘 구현하게 된다.
+                ![b7e0d35f-225e-4849-b5ff-debc59a0d866](https://raw.githubusercontent.com/is2js/screenshots/main/b7e0d35f-225e-4849-b5ff-debc59a0d866.gif)
+        1. **Paper가 파라미터로 사용되어 `외부에서` 구상체를 객체를 생성하여 선택 주입하는 곳을 먼저 찾기**
+            - **(Paper paper)가 `추상체인 Paper가 파라미터나, 생성자 주입되는 곳`이 구상체선택해서 대입하는 곳의 정의부이다.** 
+            - 인터페이스 Paper에서 `alt+F7` > `Method Parameter declaration`나 생성자로 쓰이는 곳을 찾는다.**
+            ![318eb87f-d8c0-434a-8cee-a4b860cea77f](https://raw.githubusercontent.com/is2js/screenshots/main/318eb87f-d8c0-434a-8cee-a4b860cea77f.gif)
+        2. 구상체가 중간추상층이 되는 순간부터, 
+            1. `기존 추상메서드 개별구현 로직을 -> 외부 익명클래스 구현부`로 옮길 준비(복사)
+            2. **해당 중간추상층의 추상메서드는 삭제하여, 상위추상층 -> 자식으로 자동 전달되게 하기**. 
+            3. 외부에서 구상체 객체생성하여 선택하던 곳에 `빨간줄로 추상메서드를 구현해야만, 추상클래스 익명클래스로 객체 생성 `가능해지니, **implements method -> 개별구현로직 붙여넣기**
+            ![ffa4ff4a-f3cf-4157-9664-02d0c5599060](https://raw.githubusercontent.com/is2js/screenshots/main/ffa4ff4a-f3cf-4157-9664-02d0c5599060.gif)
+
+    3. 결과적으로  ServerClient / Client는 구상클래스 같지만, 추상클래스로 남겨놔야한다
+        - 외부에서는 `new ServerClient() or new Client()`로서, **객체를생성 하면서 `case에 맡게 구현`하는 `추상클래스 구상화를 해버리는 전략`이다.**
+        - if instanceof에 분기 선택으로 사용되던 Client, ServerClient도  **1차 추상화 및 개별로직은 구상클래스내에서 하도록 `case별 class`  -> 2차 개별로직을 외부로 한번 더 빼기 위해 `abstact class -> case별 외부에서 구현`으로 바뀌게 된다**. 
+        - **`abstact`만 달아줌으로써, Client, ServerClient의 본래 특징을 유지하되 && `if를 유발하는 수행방법(내부다른정보들 입력) -> case에 따라서 외부에서 구현 && 객체 생성(형 생성)`해버리기 위해**
+        
+    4. **외부에서 익명클래스로 구현시 정의된 메서드는, 내부에서 `추상체변수.추상메서드로 정의된 것()으로 호출되는 것`을 생각하자.**
+        - `개별로직의 구현`자체만 `외부`에 구상체선택과 함께 밀어놓았고, `사용`은 외부에서 구상체 택1하지만 `파라미터/변수로 받아서 일괄처리하는 추상체의 추상메서드호출()`로 한다.
+        ![20220618000834](https://raw.githubusercontent.com/is2js/screenshots/main/20220618000834.png)
+        ![20220618000905](https://raw.githubusercontent.com/is2js/screenshots/main/20220618000905.png)

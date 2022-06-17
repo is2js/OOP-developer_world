@@ -10,9 +10,7 @@ public abstract class FrontEnd<T extends Paper> extends Programmer<T> {
     protected Language language;
 
     protected Library library;
-
-    protected abstract void setData(final T paper);
-
+    
     @Override
     protected Program makeProgram() {
         return new Program();
