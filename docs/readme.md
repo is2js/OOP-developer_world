@@ -303,6 +303,9 @@
         - 추상메서드로올리기 전에, 1개의 구현체에 집어놓고 올리는 전략을 취한다.
 
         ![7e097fea-f885-4c2d-8c38-12b6c6bbb827](https://raw.githubusercontent.com/is2js/screenshots/main/7e097fea-f885-4c2d-8c38-12b6c6bbb827.gif)
+
+    5. 나머지 분기문에 대한 구현체들 내부에서, 추상체에 올린 공통로직 추상메서드를 구현 -> `분기문내 공통로직을 구현한 추상메서드 내부로 옮긴다`
+        ![cf1ac2bb-37b2-44d1-8b49-0b2762725372](https://raw.githubusercontent.com/is2js/screenshots/main/cf1ac2bb-37b2-44d1-8b49-0b2762725372.gif)
         - **return값이 2개이상이면 메서드 추출이 안된다. 확인해보니, 마지막을 배열로 바꿔줘도, 중간에 2개의 객체 생성되면 메서드 추출이 안된다. `1개만 return하는 분기문으로 추출`한 뒤, `나중에 return값을 배열로 수정`해주거나, 수정후 추출하면 된다.**
             - 파라미터에서는 객체배열을 `(final Program... programs)`로 받는다.
             - 인자로 넣어줄 때는 
@@ -313,6 +316,24 @@
                 - returnType은 `Program[]`형태다.
         - 추출후 this 등이 나타나면 리팩토링해서 제거한다.
 
-    5. 나머지 분기문에 대한 구현체들 내부에서, 추상체에 올린 공통로직 추상메서드를 구현 -> `분기문내 공통로직을 구현한 추상메서드 내부로 옮긴다`
     6. if instanceof 분기문들은 삭제하고, 추상체.공통로직추상메서드()로 작동하게한다.
         - `추상체interface의 메서드명세로 올리기만`하면, `개별 구상체들이 구현하며 작동`한다.
+        ![05e37f81-02ae-4711-b2b7-937997f1c92f](https://raw.githubusercontent.com/is2js/screenshots/main/05e37f81-02ae-4711-b2b7-937997f1c92f.gif)
+
+
+
+10. 추상체Paper의 if분기문 제거를 위한 추상메서드를 개별구현하는 `구상체 ServerClient, Client`를 **한번 더 추상화**하여, if를 유발하던 코드들을 class내부가 아니라 `외부`로 밀어낸다.    
+    - 기존: `구상체class들에서 개별구현 정의`후 -> Paper자리에서  `구상체 생성()`하여 선택
+        ![20220617184042](https://raw.githubusercontent.com/is2js/screenshots/main/20220617184042.png)
+        ![20220617184104](https://raw.githubusercontent.com/is2js/screenshots/main/20220617184104.png)
+    - 구상체를 추상클래스화: Paper자리에서 `구상체class 생성()`과 동시에 `익명클래스로 추상메서드를 구현하여 생성`
+        - **추상화후 구상체어서 `개별구현 로직`을, Paper(추상체)변수 자리에 `구현체 선택 생성하는 곳에서 실시간 구현`하도록 외부로 미루기**
+        - 예상
+        ![20220617184129](https://raw.githubusercontent.com/is2js/screenshots/main/20220617184129.png)
+        ![20220617184140](https://raw.githubusercontent.com/is2js/screenshots/main/20220617184140.png)
+    - 이유: Director에서 분기를 만들던, Paper 속 공통로직(구상체들은 개별구현)을 `Client 쪽에서 구상체 생성선택하면서 구현`하도록 미루기 위해
+        - 외부에서 추상클래스가 된 구상체를 구상하며 객체생성하여 선택되도록
+        - 구상체 선택시 `분기문을 만들던 개별로직을 구현`하도록 하면, **if 유발코드들을 Main까지 밀어서, `추후 if 추가에 따른 class생성`이 없어지게 된다.**
+        - **if instance유발코드는 메인까지 단계적 추상화를 통해 밀어내면, 자유롭게 `구상체선택 &구상체별 개별로직 구현`뿐만 아니라 `구상체 추가` 할 수 있게 되고, `최종적으로 Main에서 구현하는 코드를 DI로 주입`할 수 있게 된다.**
+        - 생각해보니 `Programmer`쪽도 추상클래스 -> 구상체들도 추상클래스로 추상화하여, 구상체 생성하면서 개별구현로직을 구현하도록 작성된 상태다.
+            ![20220617185408](https://raw.githubusercontent.com/is2js/screenshots/main/20220617185408.png)
