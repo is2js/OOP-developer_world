@@ -28,8 +28,7 @@ public class Director {
             // 명세 
             final ServerClient project = (ServerClient) paper;
 
-            // 명세마다 필요한 프로그래머(들)
-//            final FrontEnd frontEnd = new FrontEnd();
+            // 나온 명세마다 필요한 프로그래머(들)
             final FrontEnd<ServerClient> frontEnd = new FrontEnd<>() {
                 @Override
                 protected void setData(final ServerClient paper) {
@@ -44,7 +43,7 @@ public class Director {
                 }
             };
 
-            // 명세의 필드에 프로그램머 set시켜주기 (명세 나온뒤, 한참뒤에 주입된다고 했었음)
+            // 명세의 필드에 프로그래머 set시켜주기 (명세 나온뒤, 한참뒤에 주입된다고 했었음)
             project.setFrontEndProgrammer(frontEnd);
             project.setBackEndProgrammer(backEnd);
 
