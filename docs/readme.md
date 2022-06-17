@@ -384,3 +384,14 @@
         - 한번더  `구상체들을 추상화(추상클래스 + 개별로직의 추상메서드화)`해버리면, `외부로 책임이 위임`된다.
         - 외부는 책임이 많아져도, Hell되어도 된다. Main까지 밀어냈따면 `DI를 주입`이 가능해져서 많은 책임을 처리할 수 있다.
             - **DI주입은  `객체생성 && 익클 구상화`하는 부분을 주입으로 바꾼다.**
+
+12. Main에서 Director 생성 후 project(paper) 받아 deploy까지 해보기
+    1. Director 객체 생성
+    2. director.addProject( "name", `Paper구상체 project선택 및 개별구현로직run 구현`)
+        - front라면, FrontEnd만들기 with Client형만 알도록 제네릭
+        - FrontEnd도 추상클래스라 추상메서드 구현하면서 익명클래스 구현 setData
+            - ServerClient가 아닌 Client paper에만 존재하는 field를, FrontEnd에만 존재하는 field에 주입
+        - 완성된 FrontEnd를 project에 set
+        - frontEnd가 완성된 project(this)를 통해 프로그램 만듦
+    3. direct내부에는 project - "name"의 Client형이 완성된 상태
+    4. direct가 해당 "name"의 완성된 Client project를 runProject() -> 내부에서 deploy까지 시행
