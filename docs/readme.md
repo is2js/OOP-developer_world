@@ -209,8 +209,10 @@
         2. 추상층으로부터 구상층에서 특정형을 선택하는 제네릭 `extends Programmer <특정형>`을 `<T>로 추상화`
         3. 추상클래스가 되면, 외부에서 익명클래스로 구현할 FrontEnd들이, 객체생성시, 제네릭으로 형을 선택할 수 있게 `FrontEnd<T extends Paper>`로 선택할 수 있는 T 제네릭 추가
         4. T선택(Client vs ServerClient)에 따라 구현이 달라지는 `메서드(setData(특정 paper))을 추상메서드화` + `인자`도 (T paper)로 추상화
+            - **setter를 외부로 옮긴다면, private필드에 바로 setter가 불가능하니, 추상클래스의 필드들도 익명클래스 내부에서 set할 수 있게 `private -> protecetd`**
 
-    2. 필요한만큼 외부에서 익명클래스로 구현하여 선택
+    2. 필요한만큼 객체를 못만드는 추상클래스를 `외부에서 익명클래스로 구현`하여 선택
+        - `new FrontEnd<>();` 불가 -> **`new FrontEnd<>{ 추상메서드 구현};`로 추상메서드 구현으로 추상클래스를 구현 -> `인스턴스(Programmer frontEnd = )`로 받아 사용가능**
         - if제거시에는 그 수만큼 class 구현(생성) -> 외부에서 선택
             - cf) instanceof 제거시에는 제네릭으로 제약
         - **제약된제네릭 제거시에는 `필요한만큼 외부에서 선택하여 익명class로 구현`**
@@ -219,5 +221,24 @@
         
             - 책임을 위임할 땐, `바깥방향, 클라방향으로 시켜서` 밀어내자.
                 - `자기보다 클라방향으로 밀어내야지 LSP, OCP위반을 해결`할 수 있다.
+        ![6c7eef55-5d3f-46d4-9e25-b3b10e1aadbe](https://raw.githubusercontent.com/is2js/screenshots/main/6c7eef55-5d3f-46d4-9e25-b3b10e1aadbe.gif)
+
+        - 백엔드도 동일하게 수정한다.
+            - 제약걸린 class -> 추상화 -> 외부에서 익명클래스로 T형 갯수만큼 구현
+        ![1d6cc38b-a8bc-4ec7-9393-e6b6836967e8](https://raw.githubusercontent.com/is2js/screenshots/main/1d6cc38b-a8bc-4ec7-9393-e6b6836967e8.gif)
+
+    3. 제약이 걸려서 에러가 났던 Director내부 Programmer의 템플릿메소드(public, 추상클래스안에 공통로직 구현한 일반 메소드)인  `frontEnd.getProgram(project);`에 에러가 사라졌다.
+        - 내부 setData(T paper)를 개별구현한 자식 FrontEnd가 Paper의 특정구상체(Client)만 받던 것을 익명클래스로 구현 + T형 중 1개를 골라서 받을 수 있게 되었기 때문이다.
+        ![20220617120233](https://raw.githubusercontent.com/is2js/screenshots/main/20220617120233.png)
+
     
 
+- 생각 정리하기
+    - 객체생성같아보이지만, `{}`로 구현한다면, 객체 생성불가한 `추상클래스를 익명클래스로 구현 -> 객체생성`하는 장면이다.
+        ![20220617120815](https://raw.githubusercontent.com/is2js/screenshots/main/20220617120815.png)
+    - new Class<특정형>();으로 `외부에서 제네릭을 <특정형>`으로 확정지었다면, `내부에서는 범용T(or upperbound내 범용T)으로 정의`해놓고, `외부에서 상황에 따른 특정형만 받아 처리할 수 있게 선택`하여 특정형을 인자/필드 등으로 쓰는 class로 제약을 거는 것이다.
+        - 특정형에 따라 구현이 다르다면, 그에 따른 추상화->구체형class들 갯수만큼 생성이 싫다면, 추상클래스 & 추상메서드로 정의해놓고 -> 외부에서 익명클래스로 구현해준다.
+        ![20220617121114](https://raw.githubusercontent.com/is2js/screenshots/main/20220617121114.png)
+
+    - `추상층의 제네릭`은 **구상체마다 `추상형 인자`에 대한 instanceof 1개만 존재할 때, `추상체의 특정구상체 인자`만 아는 class로 제약을 걸어 instaceof를 제거할 수 있게 도와준다.** 
+    - `제네릭T화 + 추상클래스`은 제약이 걸려 1개type만 아는 class를 `여러 type을 알 수 있게끔` 다시 T로 추상화할 수 있고, 원하는/알고싶은 특정형의 갯수만큼 `1개의 class를 원하는 만큼의 익명클래스`로 구현할 수 있다.

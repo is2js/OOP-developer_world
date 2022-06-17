@@ -3,18 +3,15 @@ package developer.progammer;
 import developer.Language;
 import developer.Library;
 import developer.Program;
-import developer.paper.Client;
+import developer.paper.Paper;
 
-public class FrontEnd extends Programmer<Client> {
+public abstract class FrontEnd<T extends Paper> extends Programmer<T> {
 
-    private Language language;
+    protected Language language;
 
-    private Library library;
+    protected Library library;
 
-    protected void setData(final Client paper) {
-        language = paper.getLanguage();
-        library = paper.getLibrary();
-    }
+    protected abstract void setData(final T paper);
 
     @Override
     protected Program makeProgram() {
