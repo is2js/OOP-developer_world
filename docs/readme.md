@@ -33,7 +33,11 @@
 
 - [base domain 파일 github](https://github.com/LenKIM/object-book/commit/629c078afffdbc76aba3ade318e0b1c004b4cf96#diff-951161e362c78e0593e03eb34335ee8cf6e0a9f3412638d338dd0d63d8f76c25)
 
-1. LSP위반 문제점
+1. LSP위반 
+	- 문제점: **Programmer의 각 구상체(BackEnd, FrontEnd)내부에** 추상체(Paper)를 넘겨받지만, 구상체 종류(ServerClient, Client)를 instanceof로 확인해서 처리해야한다.
+		- 이유: Paper가 추상체이지만, 마커인터페이스역할만 해서, 한번에 처리할 공통로직이 없는 추상체
+		![image-20220618162318702](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618162318702.png)
+		![image-20220618162348491](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618162348491.png)
 	1. 서로 다른 필드를 가지는 `Server`, `ClientServer`의 추상체 `Paper`를 받더라도, 마커인터페이스로서 한번에 일시키는 메소드가 없고 카테고리만 만들어서
 		- 이것을 받는 Programmer가 내부에서 **구상체 확인 by isinstanceof**을 해야한다.
 		- 부모형인 Paper자체만으로 자식형 Server, ClientServer가 알아서 처리되지 못한다면, **LSP 위반**이다.
