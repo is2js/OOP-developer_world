@@ -1,10 +1,11 @@
-package developer;
+package developer.domain;
 
-import developer.paper.Client;
-import developer.paper.Paper;
-import developer.paper.ServerClient;
-import developer.progammer.BackEnd;
-import developer.progammer.FrontEnd;
+import developer.domain.paper.Client;
+import developer.domain.paper.Paper;
+import developer.domain.paper.ServerClient;
+import developer.domain.progammer.BackEnd;
+import developer.domain.progammer.FrontEnd;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Director {
@@ -16,7 +17,7 @@ public class Director {
 
     public void runProject(final String name) {
         // 실행할 해당 명세가 있나 확인한다. 없으면 에러를 낸다.
-        if (projects.containsKey(name)) {
+        if (!projects.containsKey(name)) {
             throw new RuntimeException("no project");
         }
         // 명세가 있으면 각 명세종류에 따라 실행시킨다.
@@ -57,5 +58,10 @@ public class Director {
     }
 
     private void deploy(final String projectName, final Program... programs) {
+        System.out.printf("{0}이 deploy되었습니다.%n", projectName);
+        System.out.printf("상세 프로그램은 아래와 같습니다.%n");
+        Arrays.stream(programs)
+            .forEach(p -> System.out.println(programs));
+
     }
 }

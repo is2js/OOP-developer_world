@@ -1,10 +1,10 @@
-package developer.progammer;
+package developer.domain.progammer;
 
-import developer.Language;
-import developer.Program;
-import developer.Server;
-import developer.paper.Paper;
-import developer.paper.ServerClient;
+import developer.domain.Language;
+import developer.domain.Program;
+import developer.domain.Server;
+import developer.domain.paper.Paper;
+import developer.domain.paper.ServerClient;
 
 public class BackEnd implements Programmer {
 
@@ -19,10 +19,10 @@ public class BackEnd implements Programmer {
             language = pa.getBackEndLanguage();
         }
 
-        return makeBackEndProgram();
+        return makeBackEndProgram("백엔드 프로그램");
     }
 
-    private Program makeBackEndProgram() {
-        return new Program();
+    private Program makeBackEndProgram(final String name) {
+        return new Program(name);
     }
 }

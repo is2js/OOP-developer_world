@@ -1,8 +1,8 @@
-package developer.paper;
+package developer.domain.paper;
 
-import developer.Language;
-import developer.Server;
-import developer.progammer.Programmer;
+import developer.domain.Language;
+import developer.domain.Server;
+import developer.domain.progammer.Programmer;
 
 public class ServerClient implements Paper {
 
