@@ -9,17 +9,9 @@ public abstract class ServerClient implements Paper {
     private final Server server = new Server("test");
     private final Language backEndLanguage = new Language("vueJs");
     private final Language frontEndLanguage = new Language("kotlinJS");
-    private Programmer frontEndProgrammer;
-    private Programmer backEndProgrammer;
-
-    public void setFrontEndProgrammer(final Programmer programmer) {
-        this.frontEndProgrammer = frontEndProgrammer;
-    }
-
-    public void setBackEndProgrammer(final Programmer programmer) {
-        this.backEndProgrammer = backEndProgrammer;
-    }
-
+    protected Programmer frontEndProgrammer;
+    protected Programmer backEndProgrammer;
+    
     public Server getServer() {
         return server;
     }

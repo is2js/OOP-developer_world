@@ -385,7 +385,7 @@
         - 외부는 책임이 많아져도, Hell되어도 된다. Main까지 밀어냈따면 `DI를 주입`이 가능해져서 많은 책임을 처리할 수 있다.
             - **DI주입은  `객체생성 && 익클 구상화`하는 부분을 주입으로 바꾼다.**
 
-12. Main에서 Director 생성 후 project(paper) 받아 deploy까지 해보기
+12. Main에서 Director 생성 후 `Client(Front)` project(paper) run하기
     1. Director 객체 생성
     2. director.addProject( "name", `Paper구상체 project선택 및 개별구현로직run 구현`)
         1. Client형 paper라면, front개발자 섭외 with Client형을 아는 제네릭
@@ -407,4 +407,20 @@
     - 참고) public으로 연동된 class내부 속성을 컨트롤 하는 getter/setter만 봐도 설계가 잘못되었다.
         - 구현을 외부까지 밀어내면, public getter/setter가 없어진다.
         - 제대로 구현했다면(외부까지 밀), 추상클래스가 안보인체로 물려주는 필드를 `나(추상클래스)와 그 자식(구상클래스 or 익명클래스)`까지로 관리자 범위를 확장시킨 `protected수준`으로 상태값을 관리한다.
+        - public setter보다, 추클의 구상화는 proected수준으로 보안성을 강화한다.
 
+
+
+14.Main에서 Director 생성 후 `ServerClient(Backend)` project(paper) run하기 
+    1. Director 객체 생성
+    2. director.addProject( "name", `Paper구상체 project선택 및 개별구현로직run 구현`)
+        1. ServerClient형 paper라면, front개발자 + backend개발자 섭외 with 각각 ServerClient형을 아는 제네릭
+        2. FrontEnd/BackEnd도 추상클래스라 case에 맞게 추상메서드 구현하면서 익명클래스 구현 setData
+            - if였던 case에 맞게 Client가 아닌 ServerClient paper에  존재하는 field를, FrontEnd에만/backEnd에만 존재하는 field에 주입
+        3. 완성된 FrontEnd/Backend를 project에 set
+        4. frontEnd/backEnd가 완성된 project(this)를 통해 프로그램 만듦 for 내부 director의 deploy
+    3. direct내부에는 project - "name"의 ServerClient형이 완성된 상태
+    4. direct가 해당 "name"의 완성된 ServerClient project를 runProject() -> 내부에서 deploy까지 시행
+        ![23e17a74-eeeb-4ef9-83cd-b3d7e6bd0002](https://raw.githubusercontent.com/is2js/screenshots/main/23e17a74-eeeb-4ef9-83cd-b3d7e6bd0002.gif)
+    - 추가로 ServerClient내부의 `public setter 삭제` -> 각 필드들을 자식에 할당할 수 있게끔 `protected`수준으로 올려 할당으로 바꾸기
+        ![b781223c-c4d4-4fe8-a5a4-d3cd6c667876](https://raw.githubusercontent.com/is2js/screenshots/main/b781223c-c4d4-4fe8-a5a4-d3cd6c667876.gif)
