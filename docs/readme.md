@@ -53,28 +53,54 @@
 			- paper의 구현체마다 setData가 생성되나, 그 내부에서 frontend.set필드들 뿐만 아니라 backend.set필드들의 새로운 setter들이 N쪽(Programmer)구현체마다 생겨서, instanceof도 또 확인해야하는 문제가 생긴다.
 			- **추상체vs추상체는 N쪽(하위)도메인에 `if instance 물어보는 책임`을 가진상태에서 차후 `generic`으로 추상체vs추상체의 case를 해결해야한다.**
 			![image-20220618164322630](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618164322630.png)
-	- **시행착오 겪어보**기:
-		- 내 생각: 추상체가 구상체를 대신 못하는 이유는 한꺼번에 일을 못시키기 때문에, 구상체의 지식을 직접 물어보는 것
-		- **구상체인지 물어보지말고, `추상체`에게 (메서드 생성)하여 직접 시킨다.(헐리웃원칙)**
-			- 재료(필드정보)를 꺼내와서 현재 객체 필드에 set시켜주는 작업을 직접시킨다면, `현재객체(this)`를 건네줘야한다.
-				- 근데, 건네 주는 것이 카테고리를 가지는 구상체 중 1개라서 추상체로 건네줘야하고, 구상체마다 가지는 필드가 달라서 또 거기서 구상체확인을 해야하는 LSP위반이 발생한다.(차후)
-		- 받은 추상체에서 정보를 꺼내와서(getter) 내(this)필드에 할당(setter)
-			- this의 나란 객체를 넘기고 -> data를 set해야함.
-			- **get으로 물어보는 것을 시키게 된다면 -> `setXXX()`의 명칭으로 메서드로 시킨다**
-		- **`this`를 받는 쪽은 `상위형`으로 받아줘야하고, 어떤 구상형이든 들어갈 수 있게 설계해야한다.**
-			- **`인자로 this`를 사용했다? -> 책임을 완전히 위임하여 더이상 `어떤 구상형인지 안물어봐도 된다`.**
-			- **추상체로 받기 때문에 `추가 구상형을 확장할 수 있다`**
-	    - **시키다보니, Programmer 역시 추상체로 넘어가서, 구현체마다 서로 다른 필드를 가지고 있기 때문에, 재료정보를 박아주기 위해 생성되는 setter가, 공통이 아닌 필드의 setter까지 인터페이스에 올라가버린다.**
-        	![11471d15-0e22-4018-9229-046ec8227f9f](https://raw.githubusercontent.com/is2js/screenshots/main/11471d15-0e22-4018-9229-046ec8227f9f.gif)
+	- **시행착오 겪어보기**:
+		1.  LSP위반(추상체로 처리 안됨)을 헐**리웃원칙으로 시킬 땐 확인부터해야한다**.
 
-        	![20220616160834](https://raw.githubusercontent.com/is2js/screenshots/main/20220616160834.png)
-        	- 백엔드에서 사용하지 않는 library필드의 setter
-            	![20220616160857](https://raw.githubusercontent.com/is2js/screenshots/main/20220616160857.png)
-        	- 프론트에서 사용하지 않는 server필드의 setter
-            	![20220616160935](https://raw.githubusercontent.com/is2js/screenshots/main/20220616160935.png)
+		    1. 추상체에게 일을 시킬 때, 나도 추상체냐?
+		    2. 추상체vs추상체면 -> 상위(1)에서 하위(N)으로 시키는게 맞느냐? 
+			- 현재는 paper가 1이면서 상위라서.. paper에게 시킬 때, 나또한 추상체로 넘겨줘야하고, 그 개별구현체를 확인해야한다.
+		    3. 헐리웃원칙을 적용하기 전에 추상체vs추상체와 관계까지 확인한 뒤 적용시켜야한다.
 
-    	- 일단 공통기능이 아니므로 인터페이스에서는 명세는 삭제하고
-        	- **공통기능 아님 -> `구현체들 개별적으로 사용`해야하는데, `this -> 추상체`로 넘겨봤던 Paper의 구현체들은 넘겨받은 Programmer(추상체)를 받아서 내부에서 `역으로 instanceof`로 물어봐야한다.**
+		    ![cbcf8888-1ea9-49ba-8bea-075afac149f6](https://raw.githubusercontent.com/is2js/screenshots/main/cbcf8888-1ea9-49ba-8bea-075afac149f6.gif)
+
+		2. 시행착오를 한번 겪어보기 위해 1쪽인 Paper추상체에게 알아서 하도록 시켜보자.
+
+		    1. 일단 `FrontEnd`내부에서 Paper-`Client`에게 시켜본다.
+
+			- 시킬일을 메서드로 추출
+			- Client로 메서드 이동
+			- **FrontEnd(구현체)가 인자로 잡힘**
+			    - 넘길 때, this가 FrontEnd가 아닌  추상체Programmer로 넘어가야, BackEnd도 일을 시킬 수 있게 되니, backEnd처리시 처리해본다.
+
+			![aa9ac4fe-4754-4df5-a3b9-e9af59bff280](https://raw.githubusercontent.com/is2js/screenshots/main/aa9ac4fe-4754-4df5-a3b9-e9af59bff280.gif)
+
+		     2. `Backend`내부에서 Paper-`ServerClient`에게 시켜본다.
+
+			- Paper는 이제 추상체Programmer를 받아서 일을 하긴 하지만, 파라미터로 온 `Programmer도 역시 한번에 일시키는 메서드`가 없어서, **각 구현체(FrontEnd, BackEnd)마다 서로 다른 필드 -> 서로 다른 Setter을 가질 수 밖에 없다**
+
+			    1. 인터페이스에서 안쓰는 기능도 올려주거나
+
+				![5c03bba3-7b9d-42e0-abc1-c95e7da7088b](https://raw.githubusercontent.com/is2js/screenshots/main/5c03bba3-7b9d-42e0-abc1-c95e7da7088b.gif)
+
+			    2. instanceof로 물어보고 개별setter만 사용하도록 처리할 수밖에 없다.
+
+				- Programmer추상체를 파라미터로 받았는데, 개별setter를 사용해야하니, **물어보고 다운캐스팅 할 수 밖에 없는 구조**
+
+				![17501407-ae45-48f2-9384-171a5738e4e7](https://raw.githubusercontent.com/is2js/screenshots/main/17501407-ae45-48f2-9384-171a5738e4e7.gif)
+
+			3. paper(1)에게 일을 시키면서, Programer(N)을 건네주었지만, 1:N관계가 유지되는 한, 
+
+			    ![image-20220618172839846](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618172839846.png)
+
+			    ![image-20220618172850641](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618172850641.png)
+
+
+
+		3. 시행착오 끝에
+
+		    1. **추상체vs추상체라면, N에게 물어보더라도 , 1에게는 시키지 않아야하는 구나**
+			- **N(programmer)에서 1(Paper)를 받은 상태에서  `1:1`관계를 유지한체로 다른처리(`제네릭`)가 되어야하는구나.**
+		    2. **추상체vs추상체에서 instanceof를 제거하는 방법은 `제네릭`을 써야하는 구나**
 
 3. **공통기능이 없는 추상체를 넘겨받으면, LSP위반으로 instanceof로 물어봐서 개별 구상체의 기능을 이용해야한다.**
 	- this로 구상체들을 추상체로 넘겨줄지라도, 공통기능이 없는 구상체들은 내부에서 사용될 때 LSP위반하게 되어있다.
