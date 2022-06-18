@@ -115,6 +115,9 @@
    내부에서 `step별 자식들이 개별구현할 proteced abstract 메서드들`)의 추상클래스로 만들기
 	- 공통로직을 추상층에 올리지 않으면 `DRY원칙 위반`이다.
 	- 추상클래스도 메서드가 1개이하이면서 `정보를 많이 담은 추상층`으로 만드는 방법이 `템플릿 메소드 패턴`을 이용하는 것이다.
+	- **이미 템플릿메소드 패턴(`public 메서드 1개` + `개별 구현 로직은 내부에 메소드로 추출`하여 템플릿을 만들어놔야한다.**
+		- **그래야 `@OVerride로 추상클래스를 템플릿메소드패턴에 맞춰 추출`할 수 있다.**
+		- 
 		- 내부에서 protected abstract step메서드들을 자식들이 개별구현한다.
 		- **public 템플릿 메소드는 개별 자식들에게는 안보이지만 물려받는다.**
 
@@ -129,6 +132,8 @@
 			- **다른 구상체들이 @Override할 수 있게 `메서드명 추상화`를 따로 해줘야한다.**
 		- **이제 다른 구상체들이 추상클래스를 extends하고, `자신이 가진 개별로직을 훅메서드를 오버라이딩 한 곳으로 옮겨준다`.**
 		  ![6528a9bb-169b-4ccf-b7b5-e41d9047d5c2](https://raw.githubusercontent.com/is2js/screenshots/main/6528a9bb-169b-4ccf-b7b5-e41d9047d5c2.gif)
+	- **다시 정리한 템플릿메서드 패턴으로 추상클래스 추출하기**
+		- [Object)Template method pattern](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/object/templatemethod/pattern/2022/06/18/Object_Apply_Template_method_pattern.html)
 
 
 5. LSP(instanceof)의 진짜 해결책: 제네릭
