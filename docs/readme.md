@@ -34,7 +34,7 @@
 - [base domain 파일 github](https://github.com/LenKIM/object-book/commit/629c078afffdbc76aba3ade318e0b1c004b4cf96#diff-951161e362c78e0593e03eb34335ee8cf6e0a9f3412638d338dd0d63d8f76c25)
 
 1. LSP위반 
-	- 문제점: **Programmer의 각 구상체(BackEnd, FrontEnd)내부에** 추상체(Paper)를 넘겨받지만, 구상체 종류(ServerClient, Client)를 instanceof로 확인해서 처리해야한다.
+	- 문제점: **Programmer의 각 구상체(BackEnd, FrontEnd)내부에** `추상체(Paper)를 넘겨받지만, 정보가 부족하여 구상체 종류(ServerClient, Client)를 instanceof로 확인`(=LSP위반, 부모형이 자식형을 대신처리 못함)해서 처리해야하는 상황이다.
 		- 이유: Paper가 추상체이지만, 마커인터페이스역할만 해서, 한번에 처리할 공통로직이 없는 추상체
 		![image-20220618162318702](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618162318702.png)
 		![image-20220618162348491](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220618162348491.png)
