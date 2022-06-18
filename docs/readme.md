@@ -424,3 +424,43 @@
         ![23e17a74-eeeb-4ef9-83cd-b3d7e6bd0002](https://raw.githubusercontent.com/is2js/screenshots/main/23e17a74-eeeb-4ef9-83cd-b3d7e6bd0002.gif)
     - 추가로 ServerClient내부의 `public setter 삭제` -> 각 필드들을 자식에 할당할 수 있게끔 `protected`수준으로 올려 할당으로 바꾸기
         ![b781223c-c4d4-4fe8-a5a4-d3cd6c667876](https://raw.githubusercontent.com/is2js/screenshots/main/b781223c-c4d4-4fe8-a5a4-d3cd6c667876.gif)
+
+
+15. 총평 관계 생각해보기
+    1. `Director`는 추상형이 아니라 `구상형`이라 관계에 있어서 무조건 `1`을 차지한다.
+        - 인터페이스나 추상클래스로서, ADirector, BDirector로 구상형을 가진다면 추상형이면서 & N의 관계를 가진다.
+    2. `Paper`는 `추상형`으로 구상형들(Client, ServerClient)를 가지기 때문에, `N`의 관계를 가진다.
+    3. `Director` 속 `Paper`의 구상체들이 가지는 if + instaceof를 제거할 때는 제네릭을 안쓰고 추상화를 썼다.
+        - 그 이유는 `구상형` vs `추상형`의 `1:N 관계`이기 때문에 (not N:M) `N쪽에 공통로직 추상화`하여 N쪽에 책임이 위임된다면 `1:1`관계가 되어, 추상화로 해결이 된다.
+            ![20220618115555](https://raw.githubusercontent.com/is2js/screenshots/main/20220618115555.png)
+    4. 하지만, `Programmer` 속 `Paper`의 구상체들이 가지는 if + instanceof는?
+        - `추상형이 구상형들` vs `추상형`의 `N:M`관계 이기 때문에 `제네릭`을 써야한다.
+            ![20220618115427](https://raw.githubusercontent.com/is2js/screenshots/main/20220618115427.png)
+    5. N:M 관계의 instanceof를 `제네릭을 안쓰고 헐리웃원칙`으로 한쪽에 알아서해라고 넘긴후, 거기서 instanceof를 `헐리웃원칙 -> 추상화` 쓰라고 한 적도 있었다. **하지만, 헐리웃원칙의 책임을 N에게 1을 넘겨 시켜야하는데, 1에게 N을 넘겨 실패한 적도 있었다.**
+        - **`제네릭쓰기 전`에, 상/하위관계를 따져서 N:M의 `제네릭을 어디에 적용`할지 `instanceof 분기의 책임을 가져가야할 놈이 누구일지` 따져야한다.**
+        - **헐리웃원칙으로 책임 위임시에는 상위계층 vs 하위계층의 1:N관계를 따져보아야한다.(여기선 구상체에서 필드를 봄)**
+            - paper vs programmer
+            - 1paper에는 여러명의 programmer를 가진다.
+                - serverclient의 경우, 2명의 개발자를 가짐
+                    ![20220618120546](https://raw.githubusercontent.com/is2js/screenshots/main/20220618120546.png)
+            - 1programmer는 1개의 paper만 알 것이다.
+                ![20220618120639](https://raw.githubusercontent.com/is2js/screenshots/main/20220618120639.png)
+                ![20220618120657](https://raw.githubusercontent.com/is2js/screenshots/main/20220618120657.png)
+        - **헐리웃원칙으로 일을 시킬 때는, `N`쪽에 `1`을 넘기도록 시켜야 로직이 간단해진다.**
+            - paper(1)한테 시키지말고, programmer(N)한테 시키도록 헐리웃 원칙을 쓰자.
+
+    6. N:M관계에서 제네릭을 쓸 곳은, 헐리웃 원칙에 의해, 둘다 추상형이지만, N(추상형)쪽에 1(추상형)을 넘겨 instanceof를 분기를 가진 상태에서 적용한다.
+
+    7. 만일, 구상형인 Director가 추상형이 된다면? Paper(추상형)과 N:M 관계가 되었다면?
+        1. Director 역시 분기별로 instanceof가 만들어질 것이다.
+        2. 이제 N:M관계에서 `보다 추상형(N)`을 `상/하위 관계`를 따져 상위계층인 Director(1)이 아닌 하위계층 Paper(N)쪽에 분기의 책임을 위임할 것이다.
+        3. Paper는 개별구상체마다 `특정 Director`만 알 수 있도록, 해당로직에서 `(특정Direcotr director)`를 사용하고, 그 구상체class에 `<특정Director>`의 제네릭을 사용하게 한다.
+            - Paper의 추상층에는 개별Paper마다 개별Director를 배정할 수 있는 `<T extends Director>`를 붙일 것이다.
+    8. 이렇듯 if제거 방법을 정리해보자면
+        1. 객체지향의 `추상형` -> 구상형vs추상형일 때, `if분기의 책임을 구상형`으로 떠맡아서 if를 제거한다.
+        2. 객체지향의 `제네릭` - > 추상형vs추상형일 때, 상/하관계를 따져 보다 추상형인 `N쪽에 시켜서(헐리웃)책임을 위임하여 1(N):1관계를 만들어어 1개의 instanceof만 가지게 만들고` -> `제네릭을 붙여, 1(N)개당 1개의 구상형만 알 수 있게 만든다.` 
+        3. 1:N관계는 추상화시 생긴 추상층 추상메서드 -> 구승층 개별구현로직으로 해결하고
+            - N:M -> `구상형을 추상클래스로, 개별구현을 자식에게 떠넘기기`로 Main으로 `익명클래스로 개별구현`을 최대한 밀어내서 -> class생성없이 case별 익명클래스로 구현해서 처리한다
+            - main에서 구현로직이 길어져도, 차후 DI로 해결할 수 있다고 한다.
+
+
