@@ -11,7 +11,7 @@ public class Director {
     }
 
     public void runProject(final String name) {
-        if (projects.containsKey(name)) {
+        if (!projects.containsKey(name)) {
             throw new RuntimeException("no project");
         }
         final Paper paper = projects.get(name);
