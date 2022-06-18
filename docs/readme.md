@@ -137,16 +137,22 @@
 
 
 5. LSP(instanceof)의 진짜 해결책: 제네릭
+	- 문제점: public 템플릿메소드의 파라미터로 추상체(Paper,1) to 추상체(Programmer, N)으로 넘어왔지만, 개별구현-protected abstract훅메서드(step메서드)에서 instanceof가 사용되는 것을 제거해보자.
+		![015ddc06-55ab-4bf5-8062-454be6194530](https://raw.githubusercontent.com/is2js/screenshots/main/015ddc06-55ab-4bf5-8062-454be6194530.gif)
 	- `추상형`(인터페이스, 추상클래스) -> `if(OCP)`를 해결한다.
-		- 형을 통일시켜서 외부에서 그에 맞는 형을 주입하고, 내부에서 if로 판단하지 않게 한다.
+		- 형을 통일시켜서 외부에서 그에 맞는 형을 주입하도록하고, 내부에서 if로 판단하지 않게 한다.
+	- **`제네릭`: 1:1관계를 만든 상태로 추상체 to 추상체로 처리를 위임했을 때 생기는 `1개의 instanceof(LSP)`를 해결한다.**
+		- 추상층(Paper)을 넘겨주어도 받는 추상층(Programmer)의 개별구현체(FrontEnd or BackEnd)마다  어느 구현체(Client, ServerClinet)인지 확인할 수 밖에 없을 때(LSP위반), 이것을 해결해준다.
+		- 구체적으로는, `넘어오는 추상체(paper)가 정보가 적어`서 공통메서드를 안가지고 있다면 100% 확인해서 처리해야하고
+		- `넘어오는 추상체(Paper)`의 정보 양(공통기능 제공)과 무관하게, **받는 쪽(Programmer)에서 개별구현체마다 받아들이는 구현체가 달라야할 경우**(Front는 구현체1Client에만 있는 library를 / Back-server는 구현체2ServerClient에만 있는 server정보를 받아야함)해야하는 상황이라면, **구상체끼리 짝지어주어야한다. by 제네릭**
+			- Programmer(N) <- Paper(1)
+				- BackEnd(N구현체1) <- Serverclient (paper 1구현체1)
+				- FrontEnd(N구현체2) <- Client (paper 1구현체2)
+			- 
 
-	- **`제네릭` -> `instanceof(LSP)`를 해결한다.**
-		- `정보가 적은 추상층`을 넘겨주면, 받는 쪽에서는 어느구현체인지 확인할 수 밖에 없는데(LSP위반), 이것을 해결해준다.
+	- if(runtime에러), instanceof(context에러)를 미리 못 잡는데, 제네릭을 이용해서 instanceof를 제거하면, **제네릭은 type에러->  `type(형)`에 의해 에러를 내므로 -> `compile에러`로서 미리잡을 수 있게 된다.**
 
-	- if(runtime), instanceof(context에러)를 미리 못 잡는데, 제네릭을 이용해서 instanceof를 제거하면 `type(형)`에 의해 에러를 내므로 -> `compile에러`로서 미리
-	  잡을 수 있게 된다.
-
-    - **`추상층에서 upperbound(타추상층) T형을 도입 -> 메서드의 인자로 사용`하면 -> 구상층에서는 upperbound의 구현체(타구현체)를 구상층(구현체들)에서 `<T>좁혀서 제네릭 + 메서드인자`로 사용할 수 있다.**
+    - **`추상층에서 upperbound(타추상층) T형을 도입 -> 메서드의 인자로 사용`하면 -> 구상층에서는 upperbound의 구현체(타구현체)를 구상층(구현체들)에서 `<T>좁혀서 특정형 제네릭 + 메서드인자`로 사용할 수 있다.**
         - **제네릭을 사용하면,  추상층1에서 T extends 추상체2의 T 자리에 구상체2을 지원 -> 구상층1에서 형으로 (특정 구상체를 사용할 수 있게끔) 확 줄임**
 
     - 제네릭은 기계적으로 사용할 수 있다. 매핑하는 것처럼
