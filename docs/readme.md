@@ -388,10 +388,23 @@
 12. Main에서 Director 생성 후 project(paper) 받아 deploy까지 해보기
     1. Director 객체 생성
     2. director.addProject( "name", `Paper구상체 project선택 및 개별구현로직run 구현`)
-        - front라면, FrontEnd만들기 with Client형만 알도록 제네릭
-        - FrontEnd도 추상클래스라 추상메서드 구현하면서 익명클래스 구현 setData
-            - ServerClient가 아닌 Client paper에만 존재하는 field를, FrontEnd에만 존재하는 field에 주입
-        - 완성된 FrontEnd를 project에 set
-        - frontEnd가 완성된 project(this)를 통해 프로그램 만듦
+        1. Client형 paper라면, front개발자 섭외 with Client형을 아는 제네릭
+        2. FrontEnd도 추상클래스라 case에 맞게 추상메서드 구현하면서 익명클래스 구현 setData
+            - if였던 case에 맞게 ServerClient가 아닌 Client paper에만 존재하는 field를, FrontEnd에만 존재하는 field에 주입
+        3. 완성된 FrontEnd를 project에 set
+        4. frontEnd가 완성된 project(this)를 통해 프로그램 만듦 for 내부 director의 deploy
     3. direct내부에는 project - "name"의 Client형이 완성된 상태
     4. direct가 해당 "name"의 완성된 Client project를 runProject() -> 내부에서 deploy까지 시행
+
+13. 추상클래스 필드를 구상화하는 자식들은 **`public setter대신 protected필드 할당`하여 은닉화 유지**
+    - 추상클래스 필드를 `private`으로 물려받을 것이나, **자식층에서 생성이후 나중에 완성에 필요한 setter가 필요하다면, setter대신 `protected로 변경하여 할당해서 쓰자`**
+        - public setter는 클래스의 은닉성을 깨먹는다.
+        - **class의 상태관리를 자신이 처리 안하고 외부에서 함.**
+            - 원래는 setter대신 외부에서 시키면, 내부에서 set해야할 듯
+    - **개별로직 구현을 `외부(Main)으로 밀어냈다면` -> 외부에의한 setter가 필요없다. `외부에 위치한 내가 내 상태값을 갱신`한다.**
+    ![deceb2bb-5cf5-46e1-a74d-e2beb4996e8c](https://raw.githubusercontent.com/is2js/screenshots/main/deceb2bb-5cf5-46e1-a74d-e2beb4996e8c.gif)
+
+    - 참고) public으로 연동된 class내부 속성을 컨트롤 하는 getter/setter만 봐도 설계가 잘못되었다.
+        - 구현을 외부까지 밀어내면, public getter/setter가 없어진다.
+        - 제대로 구현했다면(외부까지 밀), 추상클래스가 안보인체로 물려주는 필드를 `나(추상클래스)와 그 자식(구상클래스 or 익명클래스)`까지로 관리자 범위를 확장시킨 `protected수준`으로 상태값을 관리한다.
+
