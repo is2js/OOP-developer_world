@@ -1,4 +1,4 @@
-package developer;
+package developer.domain;
 
 public class Language {
     private final String name;

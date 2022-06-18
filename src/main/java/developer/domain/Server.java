@@ -1,4 +1,4 @@
-package developer;
+package developer.domain;
 
 public class Server {
     private final String name;
