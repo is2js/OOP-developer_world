@@ -133,7 +133,7 @@
 		- **이제 다른 구상체들이 추상클래스를 extends하고, `자신이 가진 개별로직을 훅메서드를 오버라이딩 한 곳으로 옮겨준다`.**
 		  ![6528a9bb-169b-4ccf-b7b5-e41d9047d5c2](https://raw.githubusercontent.com/is2js/screenshots/main/6528a9bb-169b-4ccf-b7b5-e41d9047d5c2.gif)
 	- **다시 정리한 템플릿메서드 패턴으로 추상클래스 추출하기**
-		- [Object)Template method pattern](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/object/templatemethod/pattern/2022/06/18/Object_Apply_Template_method_pattern.html)
+		- [Object)Template method pattern](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/templatemethod/pattern/2022/06/18/Object_Template_method_pattern_1_dry.html)
 
 
 5. LSP(instanceof)의 진짜 해결책: 제네릭
