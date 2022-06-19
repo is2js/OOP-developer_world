@@ -4,20 +4,16 @@ import developer.domain.Language;
 import developer.domain.Library;
 import developer.domain.Program;
 import developer.domain.paper.Client;
-import developer.domain.paper.Paper;
 
-public class FrontEnd  extends Programmer {
+public class FrontEnd  extends Programmer<Client> {
 
     private Language language;
     private Library library;
 
     @Override
-    protected void setData(final Paper paper) {
-        if (paper instanceof Client) {
-            final Client pb = (Client) paper;
-            language = pb.getLanguage();
-            library = pb.getLibrary();
-        }
+    protected void setData(final Client paper) {
+            language = paper.getLanguage();
+            library = paper.getLibrary();
     }
 
     @Override
