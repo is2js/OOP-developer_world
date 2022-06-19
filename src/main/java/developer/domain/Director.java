@@ -30,8 +30,20 @@ public class Director {
             final ServerClient project = (ServerClient) paper;
 
             // 명세마다 필요한 프로그래머(들)
-            final FrontEnd frontEnd = new FrontEnd();
-            final BackEnd backEnd = new BackEnd();
+            final FrontEnd frontEnd = new FrontEnd<ServerClient>() {
+                @Override
+                protected void setData(final ServerClient paper) {
+                    language = paper.getFrontEndLanguage();
+                }
+            };
+
+            final BackEnd backEnd = new BackEnd<ServerClient>() {
+                @Override
+                protected void setData(final ServerClient paper) {
+                    server = paper.getServer();
+                    language = paper.getBackEndLanguage();
+                }
+            };
 
             // 명세의 필드에 프로그램머 set시켜주기 (명세 나온뒤, 한참뒤에 주입된다고 했었음)
             project.setFrontEndProgrammer(frontEnd);
@@ -50,7 +62,13 @@ public class Director {
         //2) Client 명세인 경우
         if (paper instanceof Client) {
             final Client project = (Client) paper;
-            final FrontEnd frontEnd = new FrontEnd();
+            final FrontEnd frontEnd = new FrontEnd<Client>() {
+                @Override
+                protected void setData(final Client paper) {
+                    language = paper.getLanguage();
+                    library = paper.getLibrary();
+                }
+            };
             project.setProgrammer(frontEnd);
             final Program program = frontEnd.getProgram(project);
             deploy(name, program);

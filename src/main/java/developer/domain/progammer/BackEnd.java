@@ -3,18 +3,12 @@ package developer.domain.progammer;
 import developer.domain.Language;
 import developer.domain.Program;
 import developer.domain.Server;
-import developer.domain.paper.ServerClient;
+import developer.domain.paper.Paper;
 
-public class BackEnd extends Programmer<ServerClient> {
+public abstract class BackEnd<T extends Paper> extends Programmer<T> {
 
-    private Server server;
-    private Language language;
-
-    @Override
-    protected void setData(final ServerClient paper) {
-        server = paper.getServer();
-        language = paper.getBackEndLanguage();
-    }
+    protected Server server;
+    protected Language language;
 
     @Override
     protected Program makeProgram() {
