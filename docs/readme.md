@@ -121,19 +121,8 @@
 		- 내부에서 protected abstract step메서드들을 자식들이 개별구현한다.
 		- **public 템플릿 메소드는 개별 자식들에게는 안보이지만 물려받는다.**
 
-	1. 새롭게 `@Override로 추상클래스를 뽑아내기` 위해서, 상대적으로 가벼운 기존 인터페이스를 삭제한다.
-	   ![e9f2f1e1-aef6-45fd-a2fa-e20581e48799](https://raw.githubusercontent.com/is2js/screenshots/main/e9f2f1e1-aef6-45fd-a2fa-e20581e48799.gif)
-		- **implements 구상체들마다 직접 삭제해야한다**
-		  ![20220616172755](https://raw.githubusercontent.com/is2js/screenshots/main/20220616172755.png)
-	2. 구상체 1개로 `공통 로직을 포함하는 메서드`(to public 템플릿메서드)를 @Override 리팩토링을 통해서 `Extract superclass`로 추출하되
-		- 공통로직은 추상클래스에 위치하여 구상체에서는 안보이게 된다.
-		- **내부에 딸린 개별구현로직은 `abstract`로 추출한다.**
-			- **개별로직은 abstract 메서드가 되어, 자식이 @Override한다.**
-			- **다른 구상체들이 @Override할 수 있게 `메서드명 추상화`를 따로 해줘야한다.**
-		- **이제 다른 구상체들이 추상클래스를 extends하고, `자신이 가진 개별로직을 훅메서드를 오버라이딩 한 곳으로 옮겨준다`.**
-		  ![6528a9bb-169b-4ccf-b7b5-e41d9047d5c2](https://raw.githubusercontent.com/is2js/screenshots/main/6528a9bb-169b-4ccf-b7b5-e41d9047d5c2.gif)
-	- **다시 정리한 템플릿메서드 패턴으로 추상클래스 추출하기**
-		- [Object)Template method pattern](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/templatemethod/pattern/2022/06/18/Object_Template_method_pattern_1_dry.html)
+	- **`Compare Files`를 사용한 템플릿메서드 패턴으로 추상클래스 추출하기**
+		- [Object)Template method pattern](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/templatemethod/pattern/comparefiles/2022/06/18/Object_Template_method_pattern_1_dry.html)
 
 
 5. LSP(instanceof)의 진짜 해결책: 제네릭
