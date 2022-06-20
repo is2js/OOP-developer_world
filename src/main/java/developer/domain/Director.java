@@ -58,10 +58,10 @@ public class Director {
     }
 
     private void deploy(final String projectName, final Program... programs) {
-        System.out.printf("{0}이 deploy되었습니다.%n", projectName);
+        System.out.printf("%s가 deploy되었습니다.%n", projectName);
         System.out.printf("상세 프로그램은 아래와 같습니다.%n");
         Arrays.stream(programs)
-            .forEach(p -> System.out.println(programs));
-
+            .forEach(System.out::println);
+        System.out.println();
     }
 }
