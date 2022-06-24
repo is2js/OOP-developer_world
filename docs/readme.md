@@ -1,17 +1,24 @@
 ### Information
 
-![image-20220426214804099](https://raw.githubusercontent.com/is2js/screenshots/main/image-20220426214804099.png)
+![image-20220624122247269](https://raw.githubusercontent.com/is3js/screenshots/main/image-20220624122247269.png)
 
 - Director
-	- Paper들을 DB처럼 HashMap에 String으로 매핑해놓음.
-	- runProject()로 Programmer에게 Paper를 던져서 일을 시키는 관리자
-		- run메서드가 숨어있는 곳
-- Programmer
-	1. FrontEnd
-	2. BackEnd
+    - Director는 외부로부터 Paper(기획서)를 받아온다. 
+        - Paper에는 2가지 범주(Client, ServerClient)가 있다.
+        - Director는 Paper들을 내부필드에 DB처럼 HashMap에 name으로 매핑해놓음.
+    - Director는 기획서를 보고 Programmer(개발자)들을 섭외한다.
+        - Programmer에는 2가지 범주(FrontEnd, BackEnd)가 있다.
+        - Programmer는 Paper를 보고(-> 아는 관계) 이를 바탕으로 개발한다.
+    - Director는 paper를 받아와, 그에 맞는 programmer를 섭외하고, programmer에게 paper을 던져줘서 프로그램을 개발하라고 시킨다.
+        - Director는 2종류의 범주(Paper, Programmer)의 추상층을 바라본다. 
+
 - Paper
-	1. Client
-	2. ServerClient
+    1. Client: 클라이언트 프로젝트만 만드는 기획서
+    2. ServerClient: 서버와 클라이언트 2개 프로젝트를 만드는 기획서 
+
+- Programmer
+    1. FrontEnd
+    2. BackEnd
 
 
 
