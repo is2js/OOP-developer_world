@@ -157,7 +157,7 @@
 		- **공통로직을 추상층에 올리지 않으면 `DRY원칙 위반`이다.**
 		- 추상클래스도 메서드가 1개이하이면서 `정보를 많이 담은 추상층`으로 만드는 방법이 `템플릿 메소드 패턴`을 이용하는 것이다.
 	- **해결부터: `Compare Files`를 사용한 템플릿메서드 패턴으로 추상클래스 추출하기**
-		- [Object)Template method pattern](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/templatemethod/pattern/comparefiles/2022/06/18/Object_Template_method_pattern_1_dry.html)
+		- [Object)TemplateMethod for DRY(개발자의세계)](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98%EC%84%B8%EA%B3%84/templatemethod/pattern/comparefiles/2022/06/18/Object_Template_method_pattern_1_dry.html)
 	- **이미 템플릿메소드 패턴(`public 메서드 1개` + `개별 구현 로직은 내부에 메소드로 추출`하여 템플릿을 만들어놔야한다.**
 		- **그래야 `@OVerride로 추상클래스를 템플릿메소드패턴에 맞춰 추출`할 수 있다.**
 		- 내부에서 protected abstract step메서드들을 자식들이 개별구현한다.
@@ -170,7 +170,7 @@
 	  ![015ddc06-55ab-4bf5-8062-454be6194530](https://raw.githubusercontent.com/is2js/screenshots/main/015ddc06-55ab-4bf5-8062-454be6194530.gif)
 
 	- **해결부터:**
-		- [Object) Generic for remove instanceof+@](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/generic/instanceof/2022/06/19/Obejct_generic_for_remove_instanceof.html)
+		- [Object) Generic for remove instanceof+@](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98%EC%84%B8%EA%B3%84/generic/instanceof/2022/06/19/Obejct_generic_for_remove_instanceof.html)
 
 	- `추상형`(인터페이스, 추상클래스) -> `if(OCP)`를 해결한다.
 		- 형을 통일시켜서 외부에서 그에 맞는 형을 주입하도록하고, 내부에서 if로 판단하지 않게 한다.
@@ -193,4 +193,4 @@
 - **문제점**: `Director`의 runProject 속 `Paper`의 구상체를 확인하는**instanceof는 2개라서 제네릭으로 제거못한다 -> if 2개이상으로서 전략턴으로 제거한다.**
 
 - **해결책**:
-	- [Object) Strategy pattern for OCP](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/strategy/ocp/2022/06/20/Object_stratge_pattern_for_OCP.html)
+	- [Object) Strategy pattern for OCP](https://blog.chojaeseong.com/java/%EC%9A%B0%ED%85%8C%EC%BD%94/oop/object/%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98%EC%84%B8%EA%B3%84/strategy/ocp/2022/06/20/Object_stratge_pattern_for_OCP.html)
