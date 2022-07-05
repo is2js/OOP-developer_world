@@ -14,11 +14,11 @@ public abstract class ServerClient implements Paper {
     private Programmer backEndProgrammer;
 
     public void setFrontEndProgrammer(final Programmer programmer) {
-        this.frontEndProgrammer = frontEndProgrammer;
+        this.frontEndProgrammer = programmer;
     }
 
     public void setBackEndProgrammer(final Programmer programmer) {
-        this.backEndProgrammer = backEndProgrammer;
+        this.backEndProgrammer = programmer;
     }
 
     public Server getServer() {
